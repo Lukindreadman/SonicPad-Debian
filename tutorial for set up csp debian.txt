@@ -1,0 +1,364 @@
+My greatest thanx to this guy who get me out of 3 day of painful tries to get it work https://www.reddit.com/user/Icy-Figure5146/															#####CSP-Debian Installations#####
+
+															#####Official CSP Firmware#####
+
+		https://www.creality.com/pages/download-creality-sonic-pad?spm=..page_1934481.products_display_1.1&spm_prev=..product_63450b4c-43c8-4324-9b18-1172e81585f2.header_1.1
+
+****************************************************************************************************************************************
+
+															#####CSP-Debian Firmware#####
+
+		https://github.com/Jpe230/SonicPad-Debian/releases
+
+****************************************************************************************************************************************
+
+															#####Phoenix Firmware Tool#####
+
+		https://github.com/CrealityOfficial/Creality_Sonic_Pad_Firmware
+
+****************************************************************************************************************************************
+
+															#####Flash CSP#####
+
+		https://m.youtube.com/watch?v=i0iNu-1b6NI&pp=ygUjQ3JlYWxpdHkgc29uaWMgcGFkIHBoZW9uaXggZmlybXdhcmU%3D
+
+****************************************************************************************************************************************
+
+********************************************************ONCE EVERYTHING BOOTS UP********************************************************
+
+****************************************************************************************************************************************
+
+#####Change Password##### ✅
+
+		Username: root
+		Password: toor
+
+		Username: sonic
+		Password: pad
+
+#To change root password:
+
+		sudo passwd root
+
+#To change user password:
+
+		passwd
+
+****************************************************************************************************************************************
+
+#####Running Root In Username##### ✅
+
+		sudo su
+
+#Use the "exit" command to go back to the username account
+
+****************************************************************************************************************************************
+
+#####To Comment and/or Uncomment Highlighted Text##### ✅
+
+		First highlight text
+
+		Use Ctrl & /
+
+****************************************************************************************************************************************
+
+#####Update System##### ✅
+
+		sudo resize2fs /dev/mmcblk0p5								#resize the partition#
+		df -h														#verify that the partition has been successful#
+		sudo apt install binutils-arm-none-eabi						#dependency#
+		sudo apt install libnewlib-arm-none-eabi					#dependency#
+		sudo apt install libstdc++-arm-none-eabi-newlib				#dependency#
+		sudo apt install gcc-arm-none-eabi							#dependency#
+
+****************************************************************************************************************************************
+
+#####Add Piwheels##### ✅
+
+		You should have a file at /etc/pip.conf containing:
+
+		[global]
+		extra-index-url=https://www.piwheels.org/simple
+
+If that's there, pip should use piwheels. If not, create the file and add those lines to it.
+
+****************************************************************************************************************************************
+
+#####Update System And Run Kiauh##### ✅
+
+		sudo apt-get update && sudo apt-get upgrade
+
+		kiauh/kiauh.sh
+
+#remove both moonraker & klipper one by one
+
+#install klipper with 4 instances
+
+#install moonraker with 4 instances
+
+****************************************************************************************************************************************
+
+#####KlipperScreen Multiple Printer Switch##### ✅ 
+
+#Go to KlipperScreen.conf file:
+
+		home/sonic/KlipperScreen/KlipperScreen.conf
+
+#if it doesn't exist already) put something like the following:
+
+		nano KlipperScreen.conf
+
+#Copy & Paste:
+
+		[printer MyPrinter1] moonraker_host: 127.0.0.1					#MyPrinter1 can be changed to what ever you like
+		moonraker_port: 7125
+
+		[printer MyPrinter2] moonraker_host: 127.0.0.1					#MyPrinter2 can be changed to what ever you like
+		moonraker_port: 7126
+
+		[printer MyPrinter3] moonraker_host: 127.0.0.1					#MyPrinter3 can be changed to what ever you like
+		moonraker_port: 7127
+
+		[printer MyPrinter4] moonraker_host: 127.0.0.1					#MyPrinter4 can be changed to what ever you like
+		moonraker_port: 7128
+
+#Updating via Moonraker's Update Manager#
+
+		[update_manager KlipperScreen]
+		type: git_repo
+		path: ~/KlipperScreen
+		origin: https://github.com/jordanruthe/KlipperScreen.git
+		env: ~/.KlipperScreen-env/bin/python
+		requirements: scripts/KlipperScreen-requirements.txt
+		install_script: scripts/KlipperScreen-install.sh
+		managed_services: KlipperScreen
+
+****************************************************************************************************************************************
+
+#####Fix System Clock##### ✅
+
+#To see list all available time zones, enter:
+
+		timedatectl list-timezones
+		timedatectl list-timezones | more
+		timedatectl list-timezones | grep -i asia
+		timedatectl list-timezones | grep America/New
+
+#To set the time zone to ‘Asia/Kolkata’, enter:
+
+		timedatectl set-timezone 'Asia/Kolkata'
+
+#Verify it:
+
+		timedatectl
+
+#Reboot system for KlipperScreen to take effect:
+
+		sudo reboot
+
+****************************************************************************************************************************************
+
+#####CSP-Debian ADXL 345 Accelermeter Install##### ✅
+
+		sudo apt update
+		sudo apt install python3-numpy python3-matplotlib libatlas-base-dev
+
+		~/klippy-env/bin/pip install -v numpy
+
+		cd ~/klipper/
+		sudo cp ./scripts/klipper-mcu.service /etc/systemd/system/
+		sudo systemctl enable klipper-mcu.service
+
+		cd ~/klipper
+		make clean
+		make menuconfig
+
+#Configure
+
+#Installing micro-controller code
+
+#Select Linux Process
+
+		make flash
+														
+#Using the G Sensor uncomment in the Printer.cfg file
+
+		[mcu rpi]
+		serial: /tmp.klipper_host_mcu
+
+		[adxl345]
+		cs_pin: rpi:None
+
+		[resonance_tester]
+		accel_chip: adxl345
+		probe_points: 100,100,20 # an example
+
+#Not Using The G Sensor Comment In The Printer.cfg file
+
+****************************************************************************************************************************************
+
+#####Crowsnest Install##### ✅
+
+#Install with kiauh
+
+#Installation Locations:
+
+		Default: 		/home/sonic/printer_data
+		Config file: 	/home/sonic/printer_data/config
+		Log file: 		/home/sonic/printer_data/logs
+		Env file: 		/home/sonic/printer_data/systemd
+
+#SSH into your CSP using WinSCP
+
+#Go to /home/sonic/printer_data/systemd
+
+#Open crowsnest.env
+
+#In crowsnest.env "Change from": 		CROWSNEST_ARGS="-c /home/sonic/printer_data/config/crowsnest.conf"
+          					 to: 		CROWSNEST_ARGS="-c /home/sonic/printer_1_data/config/crowsnest.conf"
+
+#Save and Close
+
+#Go to /home/sonic/printer_data/config
+
+#Open and Copy the information inside crowsnest.conf
+
+#Go to the frontend "Mainsail/Fluidd"
+
+#Create a new file:
+
+		crowsnest.conf
+
+#Paste the information inside the file
+
+#In crowsnest.conf Change from": 		log_path: /home/sonic/printer_data/logs/crowsnest.log
+							 to: 		log_path: /home/sonic/printer_1_data/logs/crowsnest.log
+
+[cam 1]												#After cam and space, you can rename if you like
+
+#To add more cameras. Copy and Paste the cam 1 section and make it cam 2
+
+#Example:
+
+[cam 2]
+mode: ustreamer                         			# ustreamer - Provides mjpg and snapshots. (All devices)
+                                       				# camera-streamer - Provides webrtc, mjpg and snapshots. (rpi + Raspi OS based only)
+enable_rtsp: false                      			# If camera-streamer is used, this enables also usage of an rtsp server
+rtsp_port: 8554                         			# Set different ports for each device!
+port: 8081                             				# HTTP/MJPG Stream/Snapshot Port
+device: /dev/video1                     			# See Log for available ...
+resolution: 640x480                     			# widthxheight format
+max_fps: 15                             			# If Hardware Supports this it will be forced, otherwise ignored/coerced.
+#custom_flags:                          			# You can run the Stream Services with custom flags.
+#v4l2ctl:                               			# Add v4l2-ctl parameters to setup your camera, see Log what your cam is capable of.
+
+#To find camera ports:
+
+		ls -l /dev/v4l/by-id								#look for index0
+
+		ls -l /dev/v4l/by-path								#look for index0
+
+#Go to camera in the "Interface Settings" "Mainsail" and add a webcam
+
+#Updating via Moonraker's Update Manager
+
+		[update_manager crowsnest]
+		type: git_repo
+		path: ~/crowsnest
+		origin: https://github.com/mainsail-crew/crowsnest.git
+		install_script: tools/install.sh
+
+****************************************************************************************************************************************
+
+#####Obico Install##### ✅ 
+
+#Create an account:
+
+#Example:
+
+		Login with google
+
+#Follow Web UI:
+
+		* Link printer(s)
+
+****************************************************************************************************************************************
+
+#####Mobileraker Install##### ✅
+
+		# Make sure that the piwheel is added "pip.conf"
+
+		#Use kiauh to install
+
+****************************************************************************************************************************************
+
+#####Telegram Bot Install##### ✅
+
+		# Make sure that the piwheel is added "pip.conf"
+
+		#Use kiauh to install
+
+****************************************************************************************************************************************
+
+#####Octoprint Install##### ✅
+
+		install with kiauh/kiauh.sh
+
+****************************************************************************************************************************************
+
+#####Sonar Install##### ✅ 
+
+#Install:
+
+		git clone https://github.com/mainsail-crew/sonar.git
+		cd ~/sonar
+		make config
+		sudo make install
+
+#Uninstall:
+
+		cd ~/sonar
+		make uninstall
+
+#Updating via Moonraker's Update Manager
+
+		[update_manager sonar]
+		type: git_repo
+		path: ~/sonar
+		origin: https://github.com/mainsail-crew/sonar.git
+		primary_branch: main
+		managed_services: sonar
+		install_script: tools/install.sh
+
+****************************************************************************************************************************************
+
+#####Tailscale Install##### ✅ 
+
+#Create an account:
+
+#Example:
+
+		Login with google
+
+#Install First Found by “fredmaranhao”
+
+		sudo update-alternatives --set iptables /usr/sbin/iptables-legacy
+		sudo update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
+
+#Add Tailscale’s package signing key and repository:
+
+		curl -fsSL https://pkgs.tailscale.com/stable/debian/bullseye.noarmor.gpg | sudo tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
+		curl -fsSL https://pkgs.tailscale.com/stable/debian/bullseye.tailscale-keyring.list | sudo tee /etc/apt/sources.list.d/tailscale.list
+
+#Install Tailscale:
+
+		sudo apt-get update
+		sudo apt-get install tailscale
+
+#Connect your machine to your Tailscale network and authenticate in your browser:
+
+		sudo tailscale up
+
+#You’re connected! You can find your Tailscale IPv4 address by running:
+
+		tailscale ip -4
